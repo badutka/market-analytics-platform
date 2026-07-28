@@ -1,0 +1,10 @@
+yfinance
+google-cloud-bigquery
+pandas
+pyarrow
+python-dotenv
+google-genai
+feedparser
+pydantic
+requests
+uuid6
