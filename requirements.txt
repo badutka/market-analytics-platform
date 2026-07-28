@@ -8,3 +8,4 @@ feedparser
 pydantic
 requests
 uuid6
+pandas-gbq
