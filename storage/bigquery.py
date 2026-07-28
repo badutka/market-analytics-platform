@@ -11,7 +11,7 @@ PROJECT_ID = "ms-fin-analytics-dev"
 client = bigquery.Client(project=PROJECT_ID)
 
 
-def load_dataframe(
+def store_dataframe(
     dataframe,
     table,
     write_disposition="WRITE_APPEND",

@@ -1,6 +1,6 @@
 import pandas as pd
 
-from storage.bigquery import load_dataframe
+from storage.bigquery import store_dataframe
 
 SENTIMENT_TABLE = "ms-fin-analytics-dev.analytics.market_sentiment"
 
@@ -13,12 +13,12 @@ def save_sentiment(result):
 
     events_df = pd.DataFrame(result.event_records())
 
-    load_dataframe(
+    store_dataframe(
         sentiment_df,
         SENTIMENT_TABLE,
     )
 
-    load_dataframe(
+    store_dataframe(
         events_df,
         EVENT_TABLE,
     )
