@@ -1,0 +1,34 @@
+body {
+  margin: 0;
+  background: transparent;
+  font-family: Arial, sans-serif;
+}
+
+.widget {
+  width: 100%;
+  padding: 20px;
+  border-radius: 16px;
+  background: #111827;
+  color: white;
+}
+
+#ticker {
+  font-size: 14px;
+  color: #9ca3af;
+}
+
+#price {
+  font-size: 42px;
+  font-weight: 700;
+  margin-top: 10px;
+}
+
+#change {
+  font-size: 20px;
+  margin-top: 5px;
+}
+
+#status {
+  margin-top: 15px;
+  color: #9ca3af;
+}
