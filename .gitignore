@@ -181,5 +181,6 @@ cython_debug/
 .cursorindexingignore
 
 .vscode
+.code-snapshot.cache
 
 gcp-key.json
