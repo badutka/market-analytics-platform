@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+  - name: gcp_raw_data
+    database: ms-fin-analytics-dev
+    schema: raw_data
+    tables:
+      - name: historical_market_prices
+        description: "Raw OHLCV financial market data from yfinance extraction pipeline"
