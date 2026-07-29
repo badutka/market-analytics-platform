@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "market-analytics-platform"
+version = "0.1.0"
+description = "Market analytics platform with Streamlit, BigQuery, dbt, and financial data pipelines"
+requires-python = ">=3.13"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+market_analytics = [
+    "components/market_widget/*.html",
+    "components/market_widget/*.css",
+    "components/market_widget/*.js",
+]

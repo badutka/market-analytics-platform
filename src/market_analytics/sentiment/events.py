@@ -1,8 +1,8 @@
 from google.genai import types
 
-from sentiment.config import client, MODEL_NAME
-from sentiment.models import EventExtraction
-from sentiment.news import format_news
+from market_analytics.sentiment.config import client, MODEL_NAME
+from market_analytics.sentiment.models import EventExtraction
+from market_analytics.sentiment.news import format_news
 
 
 def extract_events(

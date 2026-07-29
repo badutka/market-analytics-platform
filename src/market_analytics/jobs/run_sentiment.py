@@ -1,4 +1,4 @@
-from sentiment.pipeline import run_pipeline
+from market_analytics.sentiment.pipeline import run_pipeline
 
 
 def run_sentiment(

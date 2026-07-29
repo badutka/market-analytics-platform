@@ -1,6 +1,6 @@
 import pandas as pd
 
-from storage.bigquery import store_dataframe
+from market_analytics.storage.bigquery import store_dataframe
 
 SENTIMENT_TABLE = "ms-fin-analytics-dev.analytics.market_sentiment"
 

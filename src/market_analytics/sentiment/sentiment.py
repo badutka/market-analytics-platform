@@ -1,7 +1,7 @@
 from google.genai import types
 
-from sentiment.config import client, MODEL_NAME
-from sentiment.models import EventAnalysis
+from market_analytics.sentiment.config import client, MODEL_NAME
+from market_analytics.sentiment.models import EventAnalysis
 
 
 def analyze_events(

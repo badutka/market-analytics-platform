@@ -1,6 +1,6 @@
 import json
 import os
-
+from importlib.resources import files
 import streamlit.components.v1 as components
 from dotenv import load_dotenv
 
@@ -17,20 +17,23 @@ def render_market_widget(
     initial_change: float | None,
     initial_change_pct: float | None,
 ):
-    component_path = os.path.join(
-        os.path.dirname(__file__),
+
+    component_path = files("market_analytics").joinpath(
         "components",
         "market_widget",
     )
 
-    with open(os.path.join(component_path, "index.html"), "r", encoding="utf-8") as file:
-        html = file.read()
+    html = component_path.joinpath("index.html").read_text(
+        encoding="utf-8"
+    )
 
-    with open(os.path.join(component_path, "style.css"), "r", encoding="utf-8") as file:
-        css = file.read()
+    css = component_path.joinpath("style.css").read_text(
+        encoding="utf-8"
+    )
 
-    with open(os.path.join(component_path, "webSockets.js"), "r", encoding="utf-8") as file:
-        js = file.read()
+    js = component_path.joinpath("webSockets.js").read_text(
+        encoding="utf-8"
+    )
 
     config = json.dumps(
         {
@@ -41,12 +44,15 @@ def render_market_widget(
             "initial_change": initial_change,
             "initial_change_pct": initial_change_pct,
             "finnhub_key": FINNHUB_API_KEY,
-        },
-        ensure_ascii=False,
+        }
     )
 
     html = html.replace("/* CSS_PLACEHOLDER */", css)
     html = html.replace("/* JS_PLACEHOLDER */", js)
     html = html.replace("CONFIG_PLACEHOLDER", config)
 
-    return components.html(html, height=250, scrolling=False)
+    return components.html(
+        html,
+        height=250,
+        scrolling=False,
+    )

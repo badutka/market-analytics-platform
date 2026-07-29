@@ -1,4 +1,4 @@
-from sentiment.models import SignalResult
+from market_analytics.sentiment.models import SignalResult
 
 SIGNAL_MODEL_NAME = "market_intelligence_signal"
 SIGNAL_MODEL_VERSION = "0.1"

@@ -1,6 +1,6 @@
 import yfinance as yf
 
-from sentiment.models import MarketConfirmation
+from market_analytics.sentiment.models import MarketConfirmation
 
 
 def get_market_confirmation(ticker):

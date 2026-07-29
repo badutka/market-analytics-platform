@@ -3,12 +3,12 @@ import uuid6
 import logging
 import yfinance as yf
 
-from sentiment.events import extract_events
-from sentiment.market import get_market_confirmation
-from sentiment.models import MarketIntelligenceResult
-from sentiment.sentiment import analyze_events
-from sentiment.signal import calculate_signal
-from sentiment.news import get_news
+from market_analytics.sentiment.events import extract_events
+from market_analytics.sentiment.market import get_market_confirmation
+from market_analytics.sentiment.models import MarketIntelligenceResult
+from market_analytics.sentiment.sentiment import analyze_events
+from market_analytics.sentiment.signal import calculate_signal
+from market_analytics.sentiment.news import get_news
 
 logger = logging.getLogger(__name__)
 

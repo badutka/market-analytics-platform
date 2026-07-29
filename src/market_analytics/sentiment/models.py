@@ -3,7 +3,7 @@ from enum import Enum
 
 from pydantic import BaseModel, Field
 
-from sentiment.config import MODEL_NAME
+from market_analytics.sentiment.config import MODEL_NAME
 
 
 class Impact(str, Enum):

@@ -1,7 +1,7 @@
-from jobs.fetch_market_data import fetch_market_prices
-from jobs.run_sentiment import run_sentiment
-from storage.store_market import save_market_prices
-from storage.store_sentiment import save_sentiment
+from market_analytics.jobs.fetch_market_data import fetch_market_prices
+from market_analytics.jobs.run_sentiment import run_sentiment
+from market_analytics.storage.store_market import save_market_prices
+from market_analytics.storage.store_sentiment import save_sentiment
 
 import logging
 

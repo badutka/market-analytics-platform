@@ -1,4 +1,4 @@
-from storage.bigquery import store_dataframe
+from market_analytics.storage.bigquery import store_dataframe
 
 MARKET_TABLE = "ms-fin-analytics-dev.raw_data.historical_market_prices"
 
