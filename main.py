@@ -13,33 +13,39 @@ logging.basicConfig(
 
 COMPANIES = [
     ("AAPL", "Apple Inc."),
+    ("MSFT", "Microsoft Corporation"),
+    ("NVDA", "NVIDIA Corporation"),
+    ("JPM", "JPMorgan Chase & Co."),
+    ("AMZN", "Amazon.com, Inc."),
     ("BTC-USD", "Bitcoin"),
-    ("PKN.WA", "PKN Orlen"),
 ]
 
 TICKERS = [
     "AAPL",
+    "MSFT",
+    "NVDA",
+    "JPM",
+    "AMZN",
     "BTC-USD",
-    "PKN.WA",
 ]
 
 
 def main():
     # Fetch OHLCV data
     prices_df = fetch_market_prices(tickers=TICKERS)
-
+    print(prices_df[prices_df["ticker"] == "APPL"])
     # Save OHLCV data
-    save_market_prices(df=prices_df)
+    # save_market_prices(df=prices_df)
 
     # Run sentiment and store results
-    for ticker, company in COMPANIES:
+    # for ticker, company in COMPANIES:
 
-        result = run_sentiment(
-            ticker,
-            company,
-        )
+    #     result = run_sentiment(
+    #         ticker,
+    #         company,
+    #     )
 
-        save_sentiment(result)
+    #     save_sentiment(result)
 
 
 if __name__ == "__main__":

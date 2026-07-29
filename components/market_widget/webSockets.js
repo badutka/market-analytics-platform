@@ -2,12 +2,17 @@ const config = window.MARKET_CONFIG;
 
 const ticker = config.ticker;
 const assetType = config.asset_type;
+const initialPrice = config.initial_price;
 const previousClose = config.previous_close;
 const FINNHUB_API_KEY = config.finnhub_key;
+
+let currentPrice = initialPrice !== null ? Number(initialPrice) : null;
 
 document.getElementById("ticker").innerHTML = ticker;
 
 function updateWidget(price) {
+  currentPrice = price;
+
   document.getElementById("price").innerHTML = "$" + price.toFixed(2);
 
   if (previousClose !== null) {
@@ -79,7 +84,6 @@ function getStockMarketStatus() {
 function updateMarketStatus() {
   if (assetType === "crypto") {
     setStatus("● MARKET OPEN (24/7)", "#22c55e");
-
     return;
   }
 
@@ -99,6 +103,14 @@ function connectBinance() {
     const data = JSON.parse(event.data);
 
     updateWidget(Number(data.p));
+  };
+
+  socket.onclose = () => {
+    setTimeout(connectBinance, 5000);
+  };
+
+  socket.onerror = () => {
+    socket.close();
   };
 }
 
@@ -121,6 +133,19 @@ function connectFinnhub() {
       updateWidget(Number(data.data[0].p));
     }
   };
+
+  socket.onclose = () => {
+    setTimeout(connectFinnhub, 5000);
+  };
+
+  socket.onerror = () => {
+    socket.close();
+  };
+}
+
+// Populate immediately from REST snapshot
+if (currentPrice !== null) {
+  updateWidget(currentPrice);
 }
 
 updateMarketStatus();
