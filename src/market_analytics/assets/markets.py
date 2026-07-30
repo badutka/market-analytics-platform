@@ -15,3 +15,13 @@ TICKERS = [
     "AMZN",
     "BTC-USD",
 ]
+
+FINNHUB_SYMBOL_MAP = {
+    "BTC-USD": "BINANCE:BTCUSDT",
+    "ETH-USD": "BINANCE:ETHUSDT",
+}
+
+CRYPTO_TICKERS = {
+    "BTC-USD",
+    "ETH-USD",
+}

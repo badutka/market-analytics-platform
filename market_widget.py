@@ -2,11 +2,8 @@ import json
 import os
 from importlib.resources import files
 import streamlit.components.v1 as components
-from dotenv import load_dotenv
 
-load_dotenv()
-
-FINNHUB_API_KEY = os.getenv("FINNHUB_API_KEY", "")
+from market_analytics.config.settings import settings
 
 
 def render_market_widget(
@@ -23,17 +20,11 @@ def render_market_widget(
         "market_widget",
     )
 
-    html = component_path.joinpath("index.html").read_text(
-        encoding="utf-8"
-    )
+    html = component_path.joinpath("index.html").read_text(encoding="utf-8")
 
-    css = component_path.joinpath("style.css").read_text(
-        encoding="utf-8"
-    )
+    css = component_path.joinpath("style.css").read_text(encoding="utf-8")
 
-    js = component_path.joinpath("webSockets.js").read_text(
-        encoding="utf-8"
-    )
+    js = component_path.joinpath("webSockets.js").read_text(encoding="utf-8")
 
     config = json.dumps(
         {
@@ -43,7 +34,7 @@ def render_market_widget(
             "previous_close": previous_close,
             "initial_change": initial_change,
             "initial_change_pct": initial_change_pct,
-            "finnhub_key": FINNHUB_API_KEY,
+            "finnhub_key": settings.finnhub_api_key,
         }
     )
 
