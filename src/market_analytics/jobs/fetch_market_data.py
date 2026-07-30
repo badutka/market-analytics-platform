@@ -11,7 +11,7 @@ def clean_column_names(df):
     return df
 
 
-def fetch_market_prices(tickers):
+def fetch_market_prices(tickers, period):
     all_data = []
 
     logger.info(f"Starting market data download for {len(tickers)} tickers")
@@ -22,7 +22,7 @@ def fetch_market_prices(tickers):
         try:
             df = yf.download(
                 ticker,
-                period="365d",
+                period=period,
                 multi_level_index=False,
             )
         except Exception:

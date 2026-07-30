@@ -1,8 +1,9 @@
 from market_analytics.sentiment.models import SignalResult
-
-SIGNAL_MODEL_NAME = "market_intelligence_signal"
-SIGNAL_MODEL_VERSION = "0.1"
-SIGNAL_STATUS = "experimental"
+from market_analytics.sentiment.constants import (
+    SIGNAL_MODEL_NAME,
+    SIGNAL_MODEL_VERSION,
+    SIGNAL_STATUS,
+)
 
 
 def calculate_signal(

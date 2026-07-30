@@ -1,51 +1,62 @@
+import pandas as pd
+
 from market_analytics.jobs.fetch_market_data import fetch_market_prices
 from market_analytics.jobs.run_sentiment import run_sentiment
-from market_analytics.storage.store_market import save_market_prices
-from market_analytics.storage.store_sentiment import save_sentiment
-
-import logging
-
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(message)s",
+from market_analytics.clients.bigquery import BigQueryClient
+from market_analytics.config.logging import setup_logging
+from market_analytics.config.settings import settings
+from market_analytics.assets.markets import (
+    TICKERS,
+    COMPANIES,
+)
+from market_analytics.config.tables import (
+    MARKET_TABLE,
+    SENTIMENT_TABLE,
+    EVENT_TABLE,
 )
 
-
-COMPANIES = [
-    ("AAPL", "Apple Inc."),
-    ("MSFT", "Microsoft Corporation"),
-    ("NVDA", "NVIDIA Corporation"),
-    ("JPM", "JPMorgan Chase & Co."),
-    ("AMZN", "Amazon.com, Inc."),
-    ("BTC-USD", "Bitcoin"),
-]
-
-TICKERS = [
-    "AAPL",
-    "MSFT",
-    "NVDA",
-    "JPM",
-    "AMZN",
-    "BTC-USD",
-]
+setup_logging(settings.log_level)
 
 
 def main():
-    # Fetch OHLCV data
-    prices_df = fetch_market_prices(tickers=TICKERS)
-    print(prices_df[prices_df["ticker"] == "APPL"])
-    # Save OHLCV data
-    # save_market_prices(df=prices_df)
+    bqc = BigQueryClient(project_id=settings.gcp_project_id)
 
-    # Run sentiment and store results
-    # for ticker, company in COMPANIES:
+    prices_df = fetch_market_prices(tickers=TICKERS, period="365d")
 
-    #     result = run_sentiment(
-    #         ticker,
-    #         company,
-    #     )
+    bqc.write_dataframe(
+        dataframe=prices_df,
+        table=MARKET_TABLE,
+        write_disposition="WRITE_TRUNCATE",
+    )
 
-    #     save_sentiment(result)
+    sentiment_records = []
+    event_records = []
+
+    for ticker, company in COMPANIES:
+
+        result = run_sentiment(
+            ticker,
+            company,
+        )
+
+        sentiment_records.append(result.sentiment_record())
+
+        event_records.extend(result.event_records())
+
+    sentiment_df = pd.DataFrame(sentiment_records)
+    events_df = pd.DataFrame(event_records)
+
+    bqc.write_dataframe(
+        dataframe=sentiment_df,
+        table=SENTIMENT_TABLE,
+        write_disposition="WRITE_TRUNCATE",
+    )
+
+    bqc.write_dataframe(
+        dataframe=events_df,
+        table=EVENT_TABLE,
+        write_disposition="WRITE_TRUNCATE",
+    )
 
 
 if __name__ == "__main__":

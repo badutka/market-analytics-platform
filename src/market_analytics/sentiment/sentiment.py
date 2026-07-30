@@ -1,13 +1,14 @@
 from google.genai import types
 
-from market_analytics.sentiment.config import client, MODEL_NAME
 from market_analytics.sentiment.models import EventAnalysis
-
+from market_analytics.config.defaults import LLM_MODEL_NAME
+from market_analytics.clients.gemini import GeminiClient
 
 def analyze_events(
-    ticker,
-    company_name,
-    events,
+    ticker: str,
+    company_name: str,
+    events: list,
+    gemini_client: GeminiClient
 ):
 
     text = "\n".join(
@@ -44,9 +45,9 @@ Events:
 {text}
 """
 
-    response = client.models.generate_content(
-        model=MODEL_NAME,
-        contents=prompt,
+    response = gemini_client.generate(
+        model=LLM_MODEL_NAME,
+        prompt=prompt,
         config=types.GenerateContentConfig(
             response_mime_type="application/json",
             response_schema=EventAnalysis,

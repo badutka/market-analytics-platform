@@ -1,9 +1,8 @@
 import urllib.parse
-
 import feedparser
 
-from market_analytics.sentiment.config import session, SOURCE_WEIGHTS
-
+from market_analytics.clients.http import session
+from market_analytics.sentiment.constants import SOURCE_WEIGHTS
 
 def get_news(ticker, limit=25):
 

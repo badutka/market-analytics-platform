@@ -3,7 +3,7 @@ from enum import Enum
 
 from pydantic import BaseModel, Field
 
-from market_analytics.sentiment.config import MODEL_NAME
+from market_analytics.config.defaults import LLM_MODEL_NAME
 
 
 class Impact(str, Enum):
@@ -105,7 +105,7 @@ class MarketIntelligenceResult(BaseModel):
 
             "pipeline_version": "v1",
             "signal_experimental": True,
-            "model_name": MODEL_NAME,
+            "model_name": LLM_MODEL_NAME,
         }
 
     def event_records(self):
