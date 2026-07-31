@@ -8,6 +8,24 @@ version = "0.1.0"
 description = "Market analytics platform with Streamlit, BigQuery, dbt, and financial data pipelines"
 requires-python = ">=3.13"
 
+# Unified production package requirements
+dependencies = [
+    "yfinance",
+    "google-cloud-bigquery",
+    "pandas",
+    "pyarrow",
+    "python-dotenv",
+    "google-genai",
+    "feedparser",
+    "pydantic",
+    "requests",
+    "uuid6",
+    "pandas-gbq",
+    "dbt-bigquery",
+    "streamlit",
+    "plotly"
+]
+
 [tool.setuptools.packages.find]
 where = ["src"]
 
