@@ -12,3 +12,4 @@ pandas-gbq
 dbt-bigquery
 streamlit 
 plotly
+.
