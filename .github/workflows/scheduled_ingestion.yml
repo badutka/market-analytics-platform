@@ -1,0 +1,44 @@
+name: Nightly Market Ingestion Pipeline
+
+on:
+  schedule:
+    - cron: '0 23 * * *'
+  workflow_dispatch: # Allows you to manually trigger a test on the develop branch
+
+jobs:
+  run-pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code Repository
+        uses: actions/checkout@v4
+        with:
+          ref: 'develop' # Explicitly runs on your develop branch configuration
+
+      - name: Set up Python Environment
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: 'pip'
+
+      - name: Install Project Dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install .
+
+      - name: Execute Pipeline Job Script
+        env:
+          # Remapping your simple string variables directly from GitHub Secrets
+          GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
+          # Passing the raw JSON text from secrets down to the execution script layer
+          RAW_GCP_JSON: ${{ secrets.GCP_SERVICE_ACCOUNT_JSON }}
+        run: |
+          # 1. Recreate the physical JSON file from the text secret inside the GitHub runner
+          echo "$RAW_GCP_JSON" > cloud-gcp-key.json
+          
+          # 2. Assign the generated file path to the environment variable your app expects
+          export GOOGLE_APPLICATION_CREDENTIALS="cloud-gcp-key.json"
+          
+          # 3. Trigger your main orchestration script
+          python main.py
