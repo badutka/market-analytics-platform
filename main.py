@@ -3,6 +3,7 @@ import pandas as pd
 from market_analytics.jobs.fetch_market_data import fetch_market_prices
 from market_analytics.jobs.run_sentiment import run_sentiment
 from market_analytics.clients.bigquery import BigQueryClient
+from market_analytics.auth.google import get_google_credentials
 from market_analytics.config.logging import setup_logging
 from market_analytics.config.settings import settings
 from market_analytics.assets.markets import (
@@ -19,7 +20,8 @@ setup_logging(settings.log_level)
 
 
 def main():
-    bqc = BigQueryClient(project_id=settings.gcp_project_id)
+    credentials = get_google_credentials(settings)
+    bqc = BigQueryClient(project_id=settings.gcp_project_id, credentials=credentials)
 
     prices_df = fetch_market_prices(tickers=TICKERS, period="365d")
 

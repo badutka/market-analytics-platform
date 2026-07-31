@@ -3,9 +3,9 @@ from google.cloud import bigquery
 
 class BigQueryClient:
 
-    def __init__(self, project_id: str):
+    def __init__(self, project_id: str, credentials):
         self.project_id = project_id
-        self.client = bigquery.Client(project=project_id)
+        self.client = bigquery.Client(project=project_id, credentials=credentials)
 
     def _table_ref(self, table: str):
         # When the table_id does not include a project ID, default_project is used.

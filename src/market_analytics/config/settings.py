@@ -24,6 +24,7 @@ class Settings:
         self.finnhub_api_key = self._required("FINNHUB_API_KEY")
 
         self.google_credentials = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
+        self.google_credentials_json = os.getenv("GOOGLE_APPLICATION_CREDENTIALS_JSON")
 
         self.gemini_api_key = os.getenv("GEMINI_API_KEY")
 

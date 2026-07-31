@@ -1,8 +1,9 @@
 import streamlit as st
 import plotly.express as px
 
-from market_analytics.clients.bigquery import BigQueryClient
 from market_analytics.config.settings import settings
+from market_analytics.clients.bigquery import BigQueryClient
+from market_analytics.auth.google import get_google_credentials
 from market_analytics.config.defaults import FINNHUB_API_URL
 from market_analytics.assets.markets import FINNHUB_SYMBOL_MAP, CRYPTO_TICKERS
 from market_analytics.config.tables import TARGET_MARTS_TABLE
@@ -22,7 +23,8 @@ st.subheader("Interactive Portfolio Asset Performance Tracking Dashboard")
 
 @st.cache_resource
 def get_bigquery_client():
-    return BigQueryClient(project_id=settings.gcp_project_id)
+    credentials = get_google_credentials(settings)
+    return BigQueryClient(project_id=settings.gcp_project_id, credentials=credentials)
 
 
 @st.cache_data(ttl=3600)
