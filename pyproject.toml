@@ -31,8 +31,8 @@ where = ["src"]
 
 [tool.setuptools.package-data]
 market_analytics = [
-    "components/market_widget/*.html",
-    "components/market_widget/*.css",
-    "components/market_widget/*.js",
+    "components/market_card/*.html",
+    "components/market_card/*.css",
+    "components/market_card/*.js",
     "ui/*.css",
 ]
