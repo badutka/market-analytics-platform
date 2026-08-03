@@ -21,7 +21,27 @@ FINNHUB_SYMBOL_MAP = {
     "ETH-USD": "BINANCE:ETHUSDT",
 }
 
-CRYPTO_TICKERS = {
+DASHBOARD_ASSETS = [
+    "AAPL",
+    "MSFT",
+    "NVDA",
+    "AMZN",
+    "GOOGL",
+    "TSLA",
     "BTC-USD",
     "ETH-USD",
-}
+]
+
+
+STOCK_TICKERS = [
+    ticker
+    for ticker in DASHBOARD_ASSETS
+    if ticker
+    not in {
+        "BTC-USD",
+        "ETH-USD",
+    }
+]
+
+
+CRYPTO_TICKERS = [ticker for ticker in DASHBOARD_ASSETS if ticker not in STOCK_TICKERS]

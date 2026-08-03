@@ -1,17 +1,16 @@
 import streamlit as st
 import plotly.express as px
-from pathlib import Path
 
+from market_analytics.ui.theme import load_theme
 from market_analytics.config.settings import settings
-from market_analytics.clients.bigquery import BigQueryClient
+from market_analytics.clients.http import session
 from market_analytics.auth.google import get_google_credentials
 from market_analytics.config.defaults import FINNHUB_API_URL
 from market_analytics.assets.markets import FINNHUB_SYMBOL_MAP, CRYPTO_TICKERS
 from market_analytics.config.tables import TARGET_MARTS_TABLE
-from market_analytics.clients.http import session
-
-from market_analytics.components.market_card.renderer import render_market_card
-from market_analytics.ui.theme import load_theme
+from market_analytics.components.market_feed.mount import mount_market_feed
+from market_analytics.components.market_card.mount import mount_market_card
+from market_analytics.clients.bigquery import BigQueryClient
 
 st.set_page_config(
     page_title="Market Analytics Terminal",
@@ -51,6 +50,7 @@ def load_historical_metrics():
 
 
 def get_market_snapshot(ticker):
+
     symbol = get_finnhub_symbol(ticker)
 
     response = session.get(
@@ -62,6 +62,8 @@ def get_market_snapshot(ticker):
         timeout=10,
     )
 
+    if response.status_code == 401:
+        raise RuntimeError("Finnhub authentication failed")
     response.raise_for_status()
 
     data = response.json()
@@ -75,7 +77,11 @@ def get_market_snapshot(ticker):
     }
 
 
+mount_market_feed(settings.finnhub_api_key)
+
+
 try:
+
     with st.spinner("Loading market analytics..."):
         data = load_historical_metrics()
 
@@ -95,23 +101,33 @@ try:
         "MSFT",
         "NVDA",
         "BTC-USD",
+        "GOOGL",
+        "AMZN",
+        "TSLA",
+        "ETH-USD",
     ]
 
-    columns = st.columns(4)
+    for i in range(0, len(dashboard_assets), 4):
 
-    for column, ticker in zip(columns, dashboard_assets):
+        columns = st.columns(4)
 
-        with column:
-            snapshot = get_market_snapshot(ticker)
+        for column, ticker in zip(
+            columns,
+            dashboard_assets[i : i + 4],
+        ):
 
-            render_market_card(
-                ticker=ticker,
-                asset_type=get_asset_type(ticker),
-                initial_price=snapshot["price"],
-                previous_close=snapshot["previous_close"],
-                timestamp=snapshot["timestamp"],
-                finnhub_key=settings.finnhub_api_key,
-            )
+            with column:
+
+                snapshot = get_market_snapshot(ticker)
+
+                mount_market_card(
+                    ticker=ticker,
+                    asset_type=get_asset_type(ticker),
+                    initial_price=snapshot["price"],
+                    previous_close=snapshot["previous_close"],
+                    timestamp=snapshot["timestamp"],
+                    finnhub_key=settings.finnhub_api_key,
+                )
 
     st.divider()
 
@@ -154,5 +170,7 @@ try:
         use_container_width=True,
     )
 
+
 except Exception as e:
+
     st.error(f"Dashboard failed: {e}")

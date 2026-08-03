@@ -34,5 +34,8 @@ market_analytics = [
     "components/market_card/*.html",
     "components/market_card/*.css",
     "components/market_card/*.js",
+    "components/market_feed/*.html",
+    "components/market_feed/*.css",
+    "components/market_feed/*.js",
     "ui/*.css",
 ]
