@@ -62,8 +62,8 @@ def get_market_snapshot(ticker):
         timeout=10,
     )
 
-    if response.status_code == 401:
-        raise RuntimeError("Finnhub authentication failed")
+    # if response.status_code == 401:
+    #     raise RuntimeError("Finnhub authentication failed")
     response.raise_for_status()
 
     data = response.json()
