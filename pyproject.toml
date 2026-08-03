@@ -34,4 +34,5 @@ market_analytics = [
     "components/market_widget/*.html",
     "components/market_widget/*.css",
     "components/market_widget/*.js",
+    "ui/*.css",
 ]
