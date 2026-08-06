@@ -1,9 +1,9 @@
 import json
 from pathlib import Path
-
-import streamlit.components.v1 as components
+import streamlit as st
 
 from market_analytics.assets.markets import CRYPTO_TICKERS, STOCK_TICKERS
+import streamlit.components.v1 as components
 
 COMPONENT_PATH = Path(__file__).parent
 
@@ -35,5 +35,4 @@ def mount_market_feed(api_key):
     components.html(
         html,
         height=1,
-        scrolling=False,
     )

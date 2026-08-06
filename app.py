@@ -1,16 +1,23 @@
 import streamlit as st
 import plotly.express as px
+import logging
 
 from market_analytics.ui.theme import load_theme
 from market_analytics.config.settings import settings
 from market_analytics.clients.http import session
 from market_analytics.auth.google import get_google_credentials
 from market_analytics.config.defaults import FINNHUB_API_URL
-from market_analytics.assets.markets import FINNHUB_SYMBOL_MAP, CRYPTO_TICKERS
+from market_analytics.assets.markets import (
+    FINNHUB_SYMBOL_MAP,
+    CRYPTO_TICKERS,
+    DASHBOARD_ASSETS,
+)
 from market_analytics.config.tables import TARGET_MARTS_TABLE
 from market_analytics.components.market_feed.mount import mount_market_feed
 from market_analytics.components.market_card.mount import mount_market_card
 from market_analytics.clients.bigquery import BigQueryClient
+
+logger = logging.getLogger(__name__)
 
 st.set_page_config(
     page_title="Market Analytics Terminal",
@@ -43,7 +50,7 @@ def get_bigquery_client():
 
 
 @st.cache_data(ttl=3600)
-def load_historical_metrics():
+def load_price_history():
     bq = get_bigquery_client()
 
     return bq.query_table_dataframe(TARGET_MARTS_TABLE)
@@ -62,8 +69,8 @@ def get_market_snapshot(ticker):
         timeout=10,
     )
 
-    # if response.status_code == 401:
-    #     raise RuntimeError("Finnhub authentication failed")
+    if response.status_code == 401:
+        raise RuntimeError("Finnhub authentication failed")
     response.raise_for_status()
 
     data = response.json()
@@ -77,47 +84,13 @@ def get_market_snapshot(ticker):
     }
 
 
-mount_market_feed(settings.finnhub_api_key)
-
-
-try:
-
-    with st.spinner("Loading market analytics..."):
-        data = load_historical_metrics()
-
-    available_tickers = data["asset_ticker"].unique().tolist()
-
-    selected_ticker = st.selectbox(
-        "Select asset for detailed analysis",
-        available_tickers,
-    )
-
-    st.divider()
-
-    st.subheader("Live Market Overview")
-
-    dashboard_assets = [
-        "AAPL",
-        "MSFT",
-        "NVDA",
-        "BTC-USD",
-        "GOOGL",
-        "AMZN",
-        "TSLA",
-        "ETH-USD",
-    ]
+def market_overview(dashboard_assets):
 
     for i in range(0, len(dashboard_assets), 4):
-
         columns = st.columns(4)
 
-        for column, ticker in zip(
-            columns,
-            dashboard_assets[i : i + 4],
-        ):
-
+        for column, ticker in zip(columns, dashboard_assets[i : i + 4]):
             with column:
-
                 snapshot = get_market_snapshot(ticker)
 
                 mount_market_card(
@@ -129,7 +102,28 @@ try:
                     finnhub_key=settings.finnhub_api_key,
                 )
 
-    st.divider()
+
+def render_market_card(ticker):
+
+    snapshot = get_market_snapshot(ticker)
+
+    mount_market_card(
+        ticker=ticker,
+        asset_type=get_asset_type(ticker),
+        initial_price=snapshot["price"],
+        previous_close=snapshot["previous_close"],
+        timestamp=snapshot["timestamp"],
+        finnhub_key=settings.finnhub_api_key,
+    )
+
+
+@st.fragment
+def analysis_panel(data, available_tickers):
+
+    selected_ticker = st.selectbox(
+        "Select asset for detailed analysis",
+        available_tickers,
+    )
 
     st.subheader(f"Historical Performance: {selected_ticker}")
 
@@ -160,17 +154,34 @@ try:
 
     st.plotly_chart(
         fig,
-        use_container_width=True,
+        width="stretch",
     )
 
     st.subheader("Warehouse Records")
 
     st.dataframe(
         filtered_df,
-        use_container_width=True,
+        width="stretch",
     )
 
 
-except Exception as e:
+try:
+    mount_market_feed(settings.finnhub_api_key)
 
-    st.error(f"Dashboard failed: {e}")
+    with st.spinner("Loading market analytics..."):
+        data = load_price_history()
+
+    available_tickers = data["asset_ticker"].unique().tolist()
+
+    st.subheader("Live Market Overview")
+
+    market_overview(DASHBOARD_ASSETS)
+
+    st.divider()
+
+    analysis_panel(data, available_tickers)
+
+except Exception:
+    logger.exception("Dashboard failed")
+
+    st.error("Dashboard failed to load. Please try again later.")

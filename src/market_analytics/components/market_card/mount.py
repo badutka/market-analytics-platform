@@ -1,7 +1,6 @@
 import json
 from pathlib import Path
-
-import streamlit.components.v1 as components
+import streamlit as st
 
 COMPONENT_PATH = Path(__file__).parent
 
@@ -52,8 +51,7 @@ def mount_market_card(
         ticker,
     )
 
-    return components.html(
+    return st.iframe(
         html,
         height=170,
-        scrolling=False,
     )
